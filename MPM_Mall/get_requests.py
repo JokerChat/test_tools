@@ -49,6 +49,6 @@ if __name__=='__main__':
     data= {
             "mobile": '13119656020',
             "password": '123',
-            "type":2
+            "type":111
 }
     re=getRequests(url,data).get_requests()
