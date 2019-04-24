@@ -19,7 +19,9 @@ class getRequests:
             if r.json()['code']!=10000:
                 erro_msg='接口请求错误,返回code值是'+str(r.json()['code'])+'\n'+'json数据：'+'\n'+str(r.json())
                 self.__dingding(str(erro_msg))
-                mylog.info("########请求数据：{}########".format(json.dumps(self.data)))
+                mylog.info("########请求头信息：{}########".format(self.__header(self.data)))
+                mylog.info("########请求参数：{}########".format(self.data))
+                mylog.info("########返回数据：{}########".format(r.json()))
             else:
                 mylog.info("########请求头信息：{}########".format(self.__header(self.data)))
                 mylog.info("########请求参数：{}########".format(self.data))
