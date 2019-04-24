@@ -21,6 +21,8 @@ class getRequests:
                 self.__dingding(str(erro_msg))
                 mylog.info("########请求数据：{}########".format(json.dumps(self.data)))
             else:
+                mylog.info("########请求头信息：{}########".format(self.__header(self.data)))
+                mylog.info("########请求参数：{}########".format(self.data))
                 mylog.info("########返回数据：{}########".format(r.json()))
                 msg='返回数据是：'+'\n'+str(r.json())+'\n'
                 self.__dingding(str(msg))
@@ -45,10 +47,8 @@ class getRequests:
         xiaoding = DingtalkChatbot(webhook)
         xiaoding.send_text(msg=msg, is_at_all=False)
 if __name__=='__main__':
-    url='auth/login'
+    url='ad/list'
     data= {
-            "mobile": '13119656020',
-            "password": '123',
-            "type":1
+            "position":1
 }
     re=getRequests(url,data).get_requests()

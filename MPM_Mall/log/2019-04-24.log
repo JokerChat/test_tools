@@ -1,0 +1,1 @@
+2019-04-24 14:59:13,262-INFO-get_requests.py-名品猫接口测试日志信息：########返回数据：{'msg': '成功', 'code': 10000, 'data': [{'id': 97, 'name': '', 'link': '1182079', 'url': 'https://mpmallapp.oss-cn-beijing.aliyuncs.com/yciudak57dh9tho85u9s.png', 'position': 1, 'startTime': '2019-04-13 00:00:00', 'endTime': '2019-04-27 00:00:00', 'addTime': '2019-04-12 11:35:17', 'type': 0}]}########
