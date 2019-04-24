@@ -38,7 +38,8 @@ class getRequests:
     def __header(self,data):
         header = {
             'Content-Type': 'application/json',
-            'X-MP-SignVer':'v1'
+            'X-MP-SignVer':'v1',
+            'X-MPMall-Token':'npgmsvf6qs6sm59v7jdkyxtpqred2dkg'
         }
         sign = checkSign(data).check_dict()
         header['X-MP-Sign']=sign
@@ -49,8 +50,10 @@ class getRequests:
         xiaoding = DingtalkChatbot(webhook)
         xiaoding.send_text(msg=msg, is_at_all=False)
 if __name__=='__main__':
-    url='ad/list'
+    url='auth/login'
     data= {
-            "position":1
+            "mobile":"13119656020",
+            "password":"123",
+            "type":2
 }
     re=getRequests(url,data).get_requests()

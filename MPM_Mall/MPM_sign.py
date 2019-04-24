@@ -47,7 +47,7 @@ class checkSign:
             return str(base_code,'utf-8')
 if __name__=='__main__':
     dict={
-            "page": "e",
+            "page": 1,
             "limit": 10
     }
     Sign = checkSign(dict)
