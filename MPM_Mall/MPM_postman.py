@@ -6,11 +6,9 @@
 from MPM_Mall.get_requests import getRequests
 import json
 #目前是APP接口那边的,base_url是mobile
-url='/auth/login'
+url='user/info/update'
 data= {
-    "mobile":"13119656020",
-    "password":"1234",
-    "type":2
+    "name":"JokerChat"
 }
 re=getRequests(url,data).get_requests()
 print(re)
