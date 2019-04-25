@@ -6,10 +6,11 @@
 from MPM_Mall.get_requests import getRequests
 import json
 #目前是APP接口那边的,base_url是mobile
-url='ad/list'
+url='/auth/login'
 data= {
-            "position":3
+    "mobile":"13119656020",
+    "password":"1234",
+    "type":2
 }
 re=getRequests(url,data).get_requests()
-json_dict=json.dumps(re,sort_keys=True,indent=4,ensure_ascii=False)
-print(json_dict)
+print(re)

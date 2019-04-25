@@ -17,18 +17,21 @@ class getRequests:
         try:
             r = requests.post(self.url,headers=self.__header(self.data),data=json.dumps(self.data))
             if r.json()['code']!=10000:
-                erro_msg='接口请求错误,返回code值是'+str(r.json()['code'])+'\n'+'json数据：'+'\n'+str(r.json())
-                self.__dingding(str(erro_msg))
                 mylog.info("########请求头信息：{}########".format(self.__header(self.data)))
                 mylog.info("########请求参数：{}########".format(self.data))
                 mylog.info("########返回数据：{}########".format(r.json()))
+                erro_msg = '接口请求错误,返回code值是' + str(r.json()['code']) + '\n' + 'json数据：' + '\n' + str(r.json())
+                self.__dingding(str(erro_msg))
+                json_dict = json.dumps(r.json(), sort_keys=True, indent=4, ensure_ascii=False)
+                return json_dict
             else:
                 mylog.info("########请求头信息：{}########".format(self.__header(self.data)))
                 mylog.info("########请求参数：{}########".format(self.data))
                 mylog.info("########返回数据：{}########".format(r.json()))
-                msg='返回数据是：'+'\n'+str(r.json())+'\n'
+                msg='返回数据是：'+'\n'+str(json.dumps(r.json(),sort_keys=True,indent=4,ensure_ascii=False))+'\n'
                 self.__dingding(str(msg))
-                return r.json()
+                json_dict = json.dumps(r.json(), sort_keys=True, indent=4, ensure_ascii=False)
+                return json_dict
         except Exception as e:
             mylog.info("############请求失败,原因:{}############".format(e))
             erro_msg="服务器响应异常，HTTP状态码：{0}，响应内容：{1}".format(r.status_code, r.text)
@@ -46,7 +49,7 @@ class getRequests:
         return header
     #钉钉发消息
     def __dingding(self,msg):
-        webhook = 'https://oapi.dingtalk.com/robot/send?access_token=faa3d3ab188c42d20f3c5b1c02873d71573019c34cb7d3ad7561d4ffc0583ddc'
+        webhook = 'https://oapi.dingtalk.com/robot/send?access_token=ab9300b52c6fdb1bd511ce57be6f7e0e3b78ae714ae3ed24795b2c0c67a730d7'
         xiaoding = DingtalkChatbot(webhook)
         xiaoding.send_text(msg=msg, is_at_all=False)
 if __name__=='__main__':
