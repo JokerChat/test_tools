@@ -46,7 +46,7 @@ class getRequests:
         return header
     #钉钉发消息
     def __dingding(self,msg):
-        webhook = 'https://oapi.dingtalk.com/robot/send?access_token=ab9300b52c6fdb1bd511ce57be6f7e0e3b78ae714ae3ed24795b2c0c67a730d7'
+        webhook = 'https://oapi.dingtalk.com/robot/send?access_token=faa3d3ab188c42d20f3c5b1c02873d71573019c34cb7d3ad7561d4ffc0583ddc'
         xiaoding = DingtalkChatbot(webhook)
         xiaoding.send_text(msg=msg, is_at_all=False)
 if __name__=='__main__':
