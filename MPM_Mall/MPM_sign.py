@@ -7,7 +7,9 @@ import hashlib,base64
 class checkSign:
     #初始化传入dict
     def __init__(self,dict):
-        self.dict=dict
+        #不改变传入的data=>直接对字典进行复制
+        data=dict.copy()
+        self.dict=data
     def check_dict(self):
         #首先判断字典是否空,为空直接加密
         if not self.dict:
@@ -47,8 +49,9 @@ class checkSign:
             return str(base_code,'utf-8')
 if __name__=='__main__':
     dict={
-            "page": 1,
-            "limit": 10
-    }
+    "content":"测试图片上传反馈问题2019年4月28日14:00",
+    "images":["https://mpmallapp.oss-cn.aliyuncs.com/feedback/wj5fdebq0rtse2s3dryq.jpg"]
+}
     Sign = checkSign(dict)
     print(Sign.check_dict())
+    print(dict)
