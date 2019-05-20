@@ -42,7 +42,7 @@ class getRequests:
         header = {
             'Content-Type': 'application/json',
             'X-MP-SignVer':'v1',
-            'X-MPMall-Token':'t9icmt9r2xq1seaz7vjvwzyxgw99uvey'
+            'X-MPMall-Token':'s8aqs53v5aof1fp063xvfa8lhn6lmds2'
         }
         sign = checkSign(data).check_dict()
         header['X-MP-Sign']=sign
