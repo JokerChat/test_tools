@@ -35,6 +35,7 @@ class checkSign:
     def __sign(self,string):
         if string:
             sign='X-MP-SignVer=v1'+string+'&key=12345678'
+            print(sign)
             m = hashlib.md5()
             m.update(sign.encode("utf8"))
             encodeStr = m.hexdigest()
@@ -49,8 +50,9 @@ class checkSign:
             return str(base_code,'utf-8')
 if __name__=='__main__':
     dict={
-    "content":"测试图片上传反馈问题2019年4月28日14:00",
-    "images":["https://mpmallapp.oss-cn.aliyuncs.com/feedback/wj5fdebq0rtse2s3dryq.jpg"]
+	"areaCode":86,
+	"mobile":15975261685,
+	"type":2
 }
     Sign = checkSign(dict)
     print(Sign.check_dict())

@@ -2,7 +2,7 @@
 #封装request方法
 import requests,json
 from public.log import logger
-from demo.sign_demo import checkSign
+from push.push_sign import checkSign
 from dingtalkchatbot.chatbot import DingtalkChatbot
 
 mylog=logger('push接口测试').get_logger()
@@ -35,8 +35,17 @@ class getRequests:
         header = {
             'Content-Type': 'application/json',
             'X-PUSH-AppVer': '1.0.0',
-            'X-PUSH-AppKey': '2901fad4d0de2a4da56ac03093b0ddfc',
+            'X-PUSH-AppKey': 'f802a6e71315db6e807a8bce21d4a44a',
         }
+        '''
+        名品猫--测试环境APPkey:2901fad4d0de2a4da56ac03093b0ddfc
+        
+        名品猫--正式环境APPkey:c89d6bc589af80e26bb44c4b112d87e8
+        
+        合伙人--测试环境APPkey:f802a6e71315db6e807a8bce21d4a44a	
+        
+        合伙人--正式环境APPkey:91f90e055abe3cbb056a45dfec420610
+        '''
         sign = checkSign(data).check_dict()
         utime=checkSign(data).Utime()
         header['X-PUSH-Sign']=sign

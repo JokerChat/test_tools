@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # @Author       :junjie    
 # @Time         :2019/4/19 17:00
-# @FileName     :sign_demo.py
+# @FileName     :push_sign.py
 #IDE            :PyCharm
 #封装推送验签
 import time,hashlib,base64
@@ -33,14 +33,23 @@ class checkSign:
     #私有方法,生成签名
     def __sign(self,string):
         if string:
-            sign='X-PUSH-AppVer=1.0.0'+string+'&secret=MjkwMWZhZDRkMGRlMmE0ZGE1NmFjMDMwOTNiMGRkZmM='
+            '''
+            名品猫--测试环境验签key:MjkwMWZhZDRkMGRlMmE0ZGE1NmFjMDMwOTNiMGRkZmM=
+            
+            名品猫--正式环境验签key:Yzg5ZDZiYzU4OWFmODBlMjZiYjQ0YzRiMTEyZDg3ZTg=
+            
+            合伙人--测试环境验签key:ZjgwMmE2ZTcxMzE1ZGI2ZTgwN2E4YmNlMjFkNGE0NGE=
+            
+            合伙人--正式环境验签key:OTFmOTBlMDU1YWJlM2NiYjA1NmE0NWRmZWM0MjA2MTA=
+            '''
+            sign='X-PUSH-AppVer=1.0.0'+string+'&secret=ZjgwMmE2ZTcxMzE1ZGI2ZTgwN2E4YmNlMjFkNGE0NGE='
             m = hashlib.md5()
             m.update(sign.encode("utf8"))
             encodeStr = m.hexdigest()
             base_code = base64.b64encode(encodeStr.encode('utf-8'))
             return str(base_code,'utf-8')
         else:
-            sign ='X-PUSH-AppVer=1.0.0' + '&secret=MjkwMWZhZDRkMGRlMmE0ZGE1NmFjMDMwOTNiMGRkZmM='
+            sign ='X-PUSH-AppVer=1.0.0' + '&secret=ZjgwMmE2ZTcxMzE1ZGI2ZTgwN2E4YmNlMjFkNGE0NGE='
             m = hashlib.md5()
             m.update(sign.encode("utf8"))
             encodeStr = m.hexdigest()
