@@ -1,4 +1,4 @@
-# 名品猫接口调试测试工具
+# MPM接口调试测试工具
 使用说明：
 
 在MPM_postman.py直接填入url和data,
