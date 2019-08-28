@@ -5,10 +5,16 @@
 #IDE            :PyCharm
 #封装推送验签
 import time,hashlib,base64
+from public.config import *
+if get('project_type')==0:
+    Signkey=get('mpm_key')['sign_key'][get('is_test')]
+else:
+    Signkey = get('mpwj_key')['sign_key'][get('is_test')]
 class checkSign:
     #初始化传入dict
     def __init__(self,dict):
-        self.dict=dict
+        data=dict.copy()
+        self.dict=data
     def check_dict(self):
         #首先判断字典是否空,为空直接加密
         if not self.dict:
@@ -33,23 +39,14 @@ class checkSign:
     #私有方法,生成签名
     def __sign(self,string):
         if string:
-            '''
-            名品猫--测试环境验签key:MjkwMWZhZDRkMGRlMmE0ZGE1NmFjMDMwOTNiMGRkZmM=
-            
-            名品猫--正式环境验签key:Yzg5ZDZiYzU4OWFmODBlMjZiYjQ0YzRiMTEyZDg3ZTg=
-            
-            合伙人--测试环境验签key:ZjgwMmE2ZTcxMzE1ZGI2ZTgwN2E4YmNlMjFkNGE0NGE=
-            
-            合伙人--正式环境验签key:OTFmOTBlMDU1YWJlM2NiYjA1NmE0NWRmZWM0MjA2MTA=
-            '''
-            sign='X-PUSH-AppVer=1.0.0'+string+'&secret=ZjgwMmE2ZTcxMzE1ZGI2ZTgwN2E4YmNlMjFkNGE0NGE='
+            sign='X-PUSH-AppVer=1.0.0'+string+'&secret='+Signkey
             m = hashlib.md5()
             m.update(sign.encode("utf8"))
             encodeStr = m.hexdigest()
             base_code = base64.b64encode(encodeStr.encode('utf-8'))
             return str(base_code,'utf-8')
         else:
-            sign ='X-PUSH-AppVer=1.0.0' + '&secret=ZjgwMmE2ZTcxMzE1ZGI2ZTgwN2E4YmNlMjFkNGE0NGE='
+            sign ='X-PUSH-AppVer=1.0.0' + '&secret='+Signkey
             m = hashlib.md5()
             m.update(sign.encode("utf8"))
             encodeStr = m.hexdigest()

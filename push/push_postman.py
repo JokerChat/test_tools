@@ -4,18 +4,30 @@
 # @FileName     :push_postman.py
 #IDE            :PyCharm
 from push.push_requests import getRequests
+import time
+import datetime
 url='send'
+now_time=datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 data= {
-   "type":"broadcast",
-  "title":"测试模式",
-    "ticker":"test 2019年5月30日16:33:03",
-  "text":"名品猫优惠大促销",
-    "subtitle":"test",
-    "body":"苹果通知详情。。。。",
+   "type":"customizedcast",
+  "title":"收到了吗？"+now_time,
+    "ticker":"test"+now_time,
+  "text":"收到了吗？"+now_time,
+    "subtitle":"test"+now_time,
+    "body":"收到了吗？"+now_time,
      "productionMode":0,
+    "alias": 67,
+    "extra":{"A":123,"B":123344},
+    "aliasType":"alias",
 }
 # data= {
 #    "taskId":"fe1e1655ea25b5645b0b484beb32cb9d"
 # }
-re=getRequests(url,data).get_requests()
-print(re)
+index=0
+while 1:
+    re=getRequests(url,data).get_requests()
+    index +=1
+    print("推送成功")
+    time.sleep(5)
+    if index ==60:
+        break

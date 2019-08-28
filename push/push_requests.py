@@ -4,9 +4,16 @@ import requests,json
 from public.log import logger
 from push.push_sign import checkSign
 from dingtalkchatbot.chatbot import DingtalkChatbot
-
+from public.config import *
 mylog=logger('push接口测试').get_logger()
-base_url='http://120.78.198.128:9066/api/AppPush/'
+if get('is_test')==0:
+    base_url=get('url').get('test-url')
+else:
+    base_url = get('url').get('pro-url')
+if get('project_type')==0:
+    APPkey=get('mpm_key')['header_key'][get('is_test')]
+else:
+    APPkey = get('mpwj_key')['header_key'][get('is_test')]
 class getRequests:
     def __init__(self,url,data):
         if url=='send':
@@ -22,8 +29,8 @@ class getRequests:
             if r.status_code!=200:
                 mylog.info("########接口请求失败：{}########".format(r.status_code))
             mylog.info("########请求数据：{}########".format(json.dumps(self.data)))
-            mylog.info("########返回数据：{}########".format(r.json()))
-            msg=r.json()
+            mylog.info("########返回数据：{}########".format(json.dumps(r.json())))
+            msg=json.dumps(r.json(),ensure_ascii=False)
             self.__dingding(str(msg))
             return r.json()
         except Exception as e:
@@ -35,35 +42,27 @@ class getRequests:
         header = {
             'Content-Type': 'application/json',
             'X-PUSH-AppVer': '1.0.0',
-            'X-PUSH-AppKey': 'f802a6e71315db6e807a8bce21d4a44a',
+            'X-PUSH-AppKey': APPkey,
         }
-        '''
-        名品猫--测试环境APPkey:2901fad4d0de2a4da56ac03093b0ddfc
-        
-        名品猫--正式环境APPkey:c89d6bc589af80e26bb44c4b112d87e8
-        
-        合伙人--测试环境APPkey:f802a6e71315db6e807a8bce21d4a44a	
-        
-        合伙人--正式环境APPkey:91f90e055abe3cbb056a45dfec420610
-        '''
         sign = checkSign(data).check_dict()
         utime=checkSign(data).Utime()
         header['X-PUSH-Sign']=sign
         header['X-PUSH-Utime']=str(utime)
         return header
     def __dingding(self,msg):
-        webhook = 'https://oapi.dingtalk.com/robot/send?access_token=ab9300b52c6fdb1bd511ce57be6f7e0e3b78ae714ae3ed24795b2c0c67a730d7'
+        webhook = 'https://oapi.dingtalk.com/robot/send?access_token='+get('dingding_token')
         xiaoding = DingtalkChatbot(webhook)
         xiaoding.send_text(msg='返回数据是：'+'\n'+msg+'\n', is_at_all=False)
 if __name__=='__main__':
-    url='send'
-    data= {
-   "type":"broadcast",
-  "title":"俊杰测试通知标题最好40个字符串",
-    "ticker":"这是安卓的通知栏提示文字",
-  "text":"这是安卓的通知文字描述",
-    "subtitle":"苹果测试",
-    "body":"苹果通知详情。。。。",
-     "productionMode":0
-}
-    re=getRequests(url,data).get_requests()
+#     url='send'
+#     data= {
+#    "type":"broadcast",
+#   "title":"俊杰测试通知标题最好40个字符串",
+#     "ticker":"这是安卓的通知栏提示文字",
+#   "text":"这是安卓的通知文字描述",
+#     "subtitle":"苹果测试",
+#     "body":"苹果通知详情。。。。",
+#      "productionMode":0
+# }
+#     re=getRequests(url,data).get_requests()
+    print(_print())
