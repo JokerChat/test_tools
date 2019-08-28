@@ -7,8 +7,12 @@ import requests,json
 from public.log import logger
 from MPM_Mall.MPM_sign import checkSign
 from dingtalkchatbot.chatbot import DingtalkChatbot
+from public.config import *
 mylog=logger('名品猫接口测试').get_logger()
-base_url='http://api-test.mingpinmao.cn/shop/mobile/'
+if get('is_test')==0:
+    base_url=get('APP_url').get('test-url')
+else:
+    base_url = get('APP_url').get('pro-url')
 class getRequests:
     def __init__(self,url,data):
         self.url=base_url+url

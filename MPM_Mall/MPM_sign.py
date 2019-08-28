@@ -4,6 +4,11 @@
 # @FileName     :MPM_sign.py
 #IDE            :PyCharm
 import hashlib,base64
+from public.config import *
+if get('is_test')==0:
+    Signkey=get('sign_key')[0]
+else:
+    Signkey = get('sign_key')[1]
 class checkSign:
     #初始化传入dict
     def __init__(self,dict):
@@ -34,26 +39,21 @@ class checkSign:
     #私有方法,生成签名
     def __sign(self,string):
         if string:
-            sign='X-MP-SignVer=v1'+string+'&key=12345678'
-            print(sign)
+            sign=string[1:]+'&key='+Signkey#测试环境
             m = hashlib.md5()
             m.update(sign.encode("utf8"))
             encodeStr = m.hexdigest()
             base_code = base64.b64encode(encodeStr.encode('utf-8'))
             return str(base_code,'utf-8')
         else:
-            sign ='X-MP-SignVer=v1&key=12345678'
+            sign ='key='+Signkey
             m = hashlib.md5()
             m.update(sign.encode("utf8"))
             encodeStr = m.hexdigest()
             base_code = base64.b64encode(encodeStr.encode('utf-8'))
             return str(base_code,'utf-8')
 if __name__=='__main__':
-    dict={
-	"areaCode":86,
-	"mobile":15975261685,
-	"type":2
-}
+    dict={}
     Sign = checkSign(dict)
     print(Sign.check_dict())
     print(dict)

@@ -20,9 +20,12 @@ data= {
     "extra":{"A":123,"B":123344},
     "aliasType":"alias",
 }
+
 # data= {
 #    "taskId":"fe1e1655ea25b5645b0b484beb32cb9d"
 # }
+
+# re=getRequests(url,data).get_requests()
 index=0
 while 1:
     re=getRequests(url,data).get_requests()

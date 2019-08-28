@@ -16,12 +16,7 @@ else:
     APPkey = get('mpwj_key')['header_key'][get('is_test')]
 class getRequests:
     def __init__(self,url,data):
-        if url=='send':
-            self.url=base_url+url
-        elif url=='status':
-            self.url=base_url+url
-        elif url=='cancel':
-            self.url = base_url + url
+        self.url = base_url+url
         self.data=data
     def get_requests(self):
         try:
