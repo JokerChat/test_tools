@@ -6,10 +6,10 @@
 from MPM_Mall.get_requests import getRequests
 import json
 #目前是APP接口那边的,base_url是mobile
-url='feedback/create'
+url='auth/login'
 data= {
-    "content": "测试图片上传反馈问题嘻嘻嘻",
-    "images":["https://mpmallapp.oss-cn-beijing.aliyuncs.com/feedback/wj5fdebq0rtse2s3dryq.jpg"]
+            "mobile":"13119656020",
+            "password":"123456",
+            "type":2
 }
 re=getRequests(url,data).get_requests()
-print(re)

@@ -18,7 +18,6 @@ data= {
      "productionMode":0,
     "alias": 67,
     "extra":{"A":123,"B":123344},
-    "aliasType":"alias",
 }
 
 # data= {

@@ -21,12 +21,20 @@ class getRequests:
     def get_requests(self):
         try:
             r = requests.post(self.url,headers=self.__header(self.data),data=json.dumps(self.data))
-            if r.status_code!=200:
+            msg = json.dumps(r.json(), ensure_ascii=False)
+            if r.status_code==200:
+                if int(r.json()['code']) ==0:
+                    ding_msg='接口测试成功'+'\n'+'返回数据是：'+'\n'+str(msg)
+                    self.__dingding(ding_msg)
+                else:
+                    requests_data=json.dumps(self.data,ensure_ascii=False)
+                    ding_msg = '接口测试失败,不符合业务code' +'\n'+ '请求参数是：'+'\n'+str(requests_data)+'\n'+'返回数据是：'+'\n'+str(msg)
+                    self.__dingding(ding_msg)
+            else:
                 mylog.info("########接口请求失败：{}########".format(r.status_code))
+                self.__dingding(str(msg))
             mylog.info("########请求数据：{}########".format(json.dumps(self.data)))
             mylog.info("########返回数据：{}########".format(json.dumps(r.json())))
-            msg=json.dumps(r.json(),ensure_ascii=False)
-            self.__dingding(str(msg))
             return r.json()
         except Exception as e:
             mylog.info("############请求失败,原因:{}############".format(e))
@@ -47,7 +55,7 @@ class getRequests:
     def __dingding(self,msg):
         webhook = 'https://oapi.dingtalk.com/robot/send?access_token='+get('dingding_token')
         xiaoding = DingtalkChatbot(webhook)
-        xiaoding.send_text(msg='返回数据是：'+'\n'+msg+'\n', is_at_all=False)
+        xiaoding.send_text(msg=msg, is_at_all=False)
 if __name__=='__main__':
 #     url='send'
 #     data= {

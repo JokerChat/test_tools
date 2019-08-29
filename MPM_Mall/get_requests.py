@@ -20,22 +20,18 @@ class getRequests:
     def get_requests(self):
         try:
             r = requests.post(self.url,headers=self.__header(self.data),data=json.dumps(self.data))
+            msg = json.dumps(r.json(), ensure_ascii=False)
+            mylog.info("########请求头信息：{}########".format(json.dumps(self.__header(self.data))))
+            mylog.info("########请求参数：{}########".format(json.dumps(self.data), ensure_ascii=False))
+            mylog.info("########返回数据：{}########".format(json.dumps(r.json(), ensure_ascii=False)))
             if r.json()['code']!=10000:
-                mylog.info("########请求头信息：{}########".format(self.__header(self.data)))
-                mylog.info("########请求参数：{}########".format(self.data))
-                mylog.info("########返回数据：{}########".format(r.json()))
-                erro_msg = '接口请求错误,返回code值是' + str(r.json()['code']) + '\n' + 'json数据：' + '\n' + str(r.json())
-                self.__dingding(str(erro_msg))
-                json_dict = json.dumps(r.json(), sort_keys=True, indent=4, ensure_ascii=False)
-                return json_dict
+                requests_data = json.dumps(self.data, ensure_ascii=False)
+                ding_msg = '接口测试失败,不符合业务code' +'\n'+ '请求参数是：' + '\n' + str(requests_data) + '\n' + '返回数据是：' + '\n' + str( msg)
+                self.__dingding(ding_msg)
             else:
-                mylog.info("########请求头信息：{}########".format(self.__header(self.data)))
-                mylog.info("########请求参数：{}########".format(self.data))
-                mylog.info("########返回数据：{}########".format(r.json()))
-                msg='返回数据是：'+'\n'+str(json.dumps(r.json(),sort_keys=True,indent=4,ensure_ascii=False))+'\n'
-                self.__dingding(str(msg))
-                json_dict = json.dumps(r.json(), sort_keys=True, indent=4, ensure_ascii=False)
-                return json_dict
+                ding_msg = '接口测试成功' + '\n' + '返回数据是：' + '\n' + str(msg)
+                self.__dingding(ding_msg)
+            return r.json()
         except Exception as e:
             mylog.info("############请求失败,原因:{}############".format(e))
             erro_msg="服务器响应异常，HTTP状态码：{0}，响应内容：{1}".format(r.status_code, r.text)
