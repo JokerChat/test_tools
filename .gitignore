@@ -121,6 +121,7 @@ instance/
 docs/_build/
 
 # PyBuilder
+/models/
 /config/
 /.idea/
 
