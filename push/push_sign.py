@@ -6,10 +6,8 @@
 #封装推送验签
 import time,hashlib,base64
 from public.config import *
-if get('project_type')==0:
-    Signkey=get('mpm_key')['sign_key'][get('is_test')]
-else:
-    Signkey = get('mpwj_key')['sign_key'][get('is_test')]
+from public.common import project_list
+Signkey=get(project_list[get('project_type')])['sign_key'][get('is_test')]
 class checkSign:
     #初始化传入dict
     def __init__(self,dict):

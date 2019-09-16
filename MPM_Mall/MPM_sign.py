@@ -5,10 +5,8 @@
 #IDE            :PyCharm
 import hashlib,base64
 from public.config import *
-if get('is_test')==0:
-    Signkey=get('sign_key')[0]
-else:
-    Signkey = get('sign_key')[1]
+from public.common import sign
+Signkey=get('sign_key')[sign[get('project_type')]][get('is_test')]
 class checkSign:
     #初始化传入dict
     def __init__(self,dict):

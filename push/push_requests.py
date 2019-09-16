@@ -5,15 +5,12 @@ from public.log import logger
 from push.push_sign import checkSign
 from dingtalkchatbot.chatbot import DingtalkChatbot
 from public.config import *
+from public.common import url,project_list
+
 mylog=logger('push接口测试').get_logger()
-if get('is_test')==0:
-    base_url=get('url').get('test-url')
-else:
-    base_url = get('url').get('pro-url')
-if get('project_type')==0:
-    APPkey=get('mpm_key')['header_key'][get('is_test')]
-else:
-    APPkey = get('mpwj_key')['header_key'][get('is_test')]
+base_url =get(url[get('project_type')])[get('is_test')]
+print(base_url)
+APPkey=get(project_list[get('project_type')])['header_key'][get('is_test')]
 class getRequests:
     def __init__(self,url,data):
         self.url = base_url+url
@@ -68,4 +65,4 @@ if __name__=='__main__':
 #      "productionMode":0
 # }
 #     re=getRequests(url,data).get_requests()
-    print(_print())
+    print(APPkey)

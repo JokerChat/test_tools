@@ -8,11 +8,9 @@ from public.log import logger
 from MPM_Mall.MPM_sign import checkSign
 from dingtalkchatbot.chatbot import DingtalkChatbot
 from public.config import *
+from public.common import url
 mylog=logger('名品猫接口测试').get_logger()
-if get('is_test')==0:
-    base_url=get('APP_url').get('test-url')
-else:
-    base_url = get('APP_url').get('pro-url')
+base_url =get(url[get('project_type')])[get('is_test')]
 class getRequests:
     def __init__(self,url,data):
         self.url=base_url+url
@@ -20,6 +18,10 @@ class getRequests:
     def get_requests(self):
         try:
             r = requests.post(self.url,headers=self.__header(self.data),data=json.dumps(self.data))
+            mylog.info("########请求头信息：{}########".format(json.dumps(self.__header(self.data))))
+            mylog.info("########请求参数：{}########".format(json.dumps(self.data), ensure_ascii=False))
+            mylog.info("########返回数据：{}########".format(json.dumps(r.json(), ensure_ascii=False)))
+            '''
             msg = json.dumps(r.json(), ensure_ascii=False)
             mylog.info("########请求头信息：{}########".format(json.dumps(self.__header(self.data))))
             mylog.info("########请求参数：{}########".format(json.dumps(self.data), ensure_ascii=False))
@@ -31,6 +33,7 @@ class getRequests:
             else:
                 ding_msg = '接口测试成功' + '\n' + '返回数据是：' + '\n' + str(msg)
                 self.__dingding(ding_msg)
+            '''
             return r.json()
         except Exception as e:
             mylog.info("############请求失败,原因:{}############".format(e))
@@ -41,11 +44,11 @@ class getRequests:
     def __header(self,data):
         header = {
             'Content-Type': 'application/json',
-            'X-MP-SignVer':'v1',
-            'X-MPMall-Token':'s8aqs53v5aof1fp063xvfa8lhn6lmds2'
+            'X-MPMALL-Signver':'v1',
+            'X-MPMALL-Token':'s8aqs53v5aof1fp063xvfa8lhn6lmds2'
         }
         sign = checkSign(data).check_dict()
-        header['X-MP-Sign']=sign
+        header['X-MPMALL-Sign']=sign
         return header
     #钉钉发消息
     def __dingding(self,msg):

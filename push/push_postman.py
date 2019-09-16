@@ -8,16 +8,35 @@ import time
 import datetime
 url='send'
 now_time=datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-data= {
-   "type":"customizedcast",
-  "title":"收到了吗？"+now_time,
-    "ticker":"test"+now_time,
-  "text":"收到了吗？"+now_time,
-    "subtitle":"test"+now_time,
-    "body":"收到了吗？"+now_time,
-     "productionMode":0,
-    "alias": 67,
-    "extra":{"A":123,"B":123344},
+data={
+    "ticker":"恭喜你升级为M司令（高级合伙人）",
+    "activity":"com.xfhl.umpushlib.MipushTestActivity",
+    "productionMode":1,
+    "mipush":"1",
+    "body":"",
+    "title":"系统通知",
+    "type":"customizedcast",
+    "platform":"MPWJMALL",
+    "url":"0",
+    "miActivity":"com.xfhl.umpushlib.MipushTestActivity",
+    "aliasType":"alias",
+    "extra":{
+        "link":"",
+        "type":3
+    },
+    "subtitle":"恭喜你升级为M司令（高级合伙人）",
+    "afterOpen":"go_activity",
+    "alias":"703",
+    "startTime":"2019-09-05 16:39:26",
+    "text":"恭喜你升级为M司令（高级合伙z人）",
+    "description":"",
+    "production_mode":None,
+    "start_time":"2019-09-05 16:39:26",
+    "alert":{
+        "title":"系统通知",
+        "subtitle":"恭喜你升级为M司令（高级合伙人）",
+        "body":""
+    }
 }
 
 # data= {
@@ -25,6 +44,9 @@ data= {
 # }
 
 # re=getRequests(url,data).get_requests()
+
+
+
 index=0
 while 1:
     re=getRequests(url,data).get_requests()
