@@ -4,7 +4,6 @@
 # @FileName     :MPM_postman.py
 #IDE            :PyCharm
 from MPM_Mall.get_requests import getRequests
-import json
 #目前是APP接口那边的,base_url是mobile
 url='auth/login'
 data= {
@@ -13,3 +12,4 @@ data= {
             "type":2
 }
 re=getRequests(url,data).get_requests()
+print(re)

@@ -7,7 +7,8 @@ from flask import request,jsonify
 from MPM_Mall import app
 from MPM_Mall.MPM_sign import checkSign
 from models.mpm import ShopUser,ShopUserInvite,ShopUserIncomeDetail
-
+from public.aescode import AES_CBC
+aes=AES_CBC()
 #签名数据生成接口
 @app.route('/sign',methods=['GET','POST'])
 def apiSign():
@@ -31,7 +32,7 @@ def apiSign():
         print(str(exception))
         return jsonify({'code': 500, 'msg': '系统错误'})
 
-'''
+
 def userName(level):
     if level == 0:
         str1 = 'M星人'
@@ -54,9 +55,8 @@ def userName(level):
     else:
         str1='高级代言人'
     return str1
+
 '''
-
-
 def userName(level):
     if level == 0:
         str1 = '普通用户'
@@ -71,6 +71,7 @@ def userName(level):
     else:
         str1='联创'
     return str1
+'''
 
 #查询关系
 @app.route('/getName',methods=['POST','GET'])
@@ -128,34 +129,40 @@ def apiLevel():
         print(str(exception))
         return jsonify({'msg': '系统错误','code': 500 })
 
-#查询收益
-@app.route('/getIncome',methods=['POST','GET'])
+
+# 查询收益
+@app.route('/getIncome', methods=['POST', 'GET'])
 def apiIncome():
     try:
-        if request.method=='POST':
-            Sum=0
-            ids=[]
-            orderNo=request.form['orderNo']
-            query = ShopUser.query.join(ShopUserIncomeDetail, ShopUser.id == ShopUserIncomeDetail.user_id).add_entity(ShopUserIncomeDetail).filter(ShopUserIncomeDetail.order_no == orderNo).order_by(ShopUserIncomeDetail.id.asc())
-            for ll in query.all():
-                Sum+=ll.ShopUserIncomeDetail.operate_income
-                str1 = userName(ll.ShopUser.pt_level)
-                ids.append({'use_id': ll.ShopUser.id, 'level': str1,'IncomeDetail':str(ll.ShopUserIncomeDetail.operate_income)})
-            print(Sum)
-            return jsonify({'msg':'成功','code':200,'data':{'count':str(Sum),'items':ids}})
-        elif request.method=='GET':
-            Sum1 = 0
-            ids1 = []
-            orderNo = request.args.get('orderNo')
+        if request.method == 'POST':
+            Sum = 0
+            ids = []
+            orderNo = request.form['orderNo']
             query = ShopUser.query.join(ShopUserIncomeDetail, ShopUser.id == ShopUserIncomeDetail.user_id).add_entity(
                 ShopUserIncomeDetail).filter(ShopUserIncomeDetail.order_no == orderNo).order_by(
                 ShopUserIncomeDetail.id.asc())
             for ll in query.all():
-                Sum1 += ll.ShopUserIncomeDetail.operate_income
+                Sum += ll.ShopUserIncomeDetail.operate_income
                 str1 = userName(ll.ShopUser.pt_level)
-                ids1.append({'use_id': ll.ShopUser.id, 'level': str1,
+                ids.append({'use_id': ll.ShopUser.id, 'level': str1,
                             'IncomeDetail': str(ll.ShopUserIncomeDetail.operate_income)})
-            return jsonify({'msg': '成功', 'code': 200, 'data': {'count': str(Sum1), 'items': ids1}})
+            return jsonify({'msg': '成功', 'code': 200, 'data': {'count': str(Sum), 'items': ids}})
     except Exception as exception:
         print(str(exception))
-        return jsonify({'msg': '系统错误','code': 500 })
+        return jsonify({'msg': '系统错误', 'code': 500, 'error': str(exception)})
+
+#AES加解密
+@app.route('/aescoder', methods=['POST', 'GET'])
+def apiEncode():
+    try:
+        if request.method == 'POST':
+            text = request.form['text']
+            type = int(request.form['type'])
+            if type == 0:
+                aes_text = aes.encrypt_oracle(text)
+                return jsonify({'msg': '成功', 'code': 200, 'data': aes_text})
+            elif type == 1:
+                aes_text = aes.decrypt_oralce(text)
+                return jsonify({'msg': '成功', 'code': 200, 'data': aes_text})
+    except Exception as exception:
+        return jsonify({'msg': '系统错误', 'code': 500, 'error': str(exception)})

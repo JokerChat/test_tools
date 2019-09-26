@@ -9,7 +9,7 @@ from MPM_Mall.MPM_sign import checkSign
 from dingtalkchatbot.chatbot import DingtalkChatbot
 from public.config import *
 from public.common import url
-mylog=logger('名品猫接口测试').get_logger()
+mylog=logger('接口测试').get_logger()
 base_url =get(url[get('project_type')])[get('is_test')]
 class getRequests:
     def __init__(self,url,data):
@@ -45,7 +45,7 @@ class getRequests:
         header = {
             'Content-Type': 'application/json',
             'X-MPMALL-Signver':'v1',
-            'X-MPMALL-Token':'s8aqs53v5aof1fp063xvfa8lhn6lmds2'
+            'X-MPMALL-Token': get('token')
         }
         sign = checkSign(data).check_dict()
         header['X-MPMALL-Sign']=sign
