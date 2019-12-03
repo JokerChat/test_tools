@@ -36,10 +36,13 @@ class getRequests:
             '''
             return r.json()
         except Exception as e:
+            print(e)
+            '''
             mylog.info("############请求失败,原因:{}############".format(e))
             erro_msg="服务器响应异常，HTTP状态码：{0}，响应内容：{1}".format(r.status_code, r.text)
             self.__dingding(str(erro_msg))
             mylog.info("服务器响应异常，状态码：%s，响应内容：%s" % (r.status_code, r.text))
+            '''
     #请求头
     def __header(self,data):
         header = {
@@ -58,8 +61,12 @@ class getRequests:
 if __name__=='__main__':
     url='auth/login'
     data= {
-            "mobile":"13119656020",
-            "password":"123",
-            "type":2
-}
+		"code": "0",
+		"mobile": str(mobile),
+		"inviteCode": inviteCode,
+		"mercId": "888000000000003",
+		"platform": "XFYLMALL",
+		"sysCnl": "H5",
+		"timestamp": "1574066264"
+	}
     re=getRequests(url,data).get_requests()

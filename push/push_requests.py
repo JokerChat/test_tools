@@ -9,8 +9,8 @@ from public.common import url,project_list
 
 mylog=logger('push接口测试').get_logger()
 base_url =get(url[get('project_type')])[get('is_test')]
-print(base_url)
 APPkey=get(project_list[get('project_type')])['header_key'][get('is_test')]
+
 class getRequests:
     def __init__(self,url,data):
         self.url = base_url+url
