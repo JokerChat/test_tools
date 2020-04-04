@@ -17,6 +17,7 @@ class getRequests:
         self.data=data
     def get_requests(self):
         try:
+            mylog.info("########请求头信息：{} ########".format(self.url))
             r = requests.post(self.url,headers=self.__header(self.data),data=json.dumps(self.data))
             mylog.info("########请求头信息：{}########".format(json.dumps(self.__header(self.data))))
             mylog.info("########请求参数：{}########".format(json.dumps(self.data), ensure_ascii=False))

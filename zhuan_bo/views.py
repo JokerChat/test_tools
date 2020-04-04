@@ -4,94 +4,40 @@
 # @FileName     :views.py
 #IDE            :PyCharm
 from flask import request, jsonify
-from MPM_Mall import app,db
-from MPM_Mall.MPM_sign import checkSign
-from models.mpm import ShopUser, ShopUserInvite, ShopUserIncomeDetail,ShopOrder
+from zhuan_bo import app, db
+from models.mpm import ShopUser, ShopUserInvite, ShopUserIncomeDetail, ShopOrder
+from models.models_zhuanbo import MliveProfitLog,MliveUser
 from public.aescode import AES_CBC
 from MPM_Mall.get_requests import getRequests
 aes = AES_CBC()
-# 签名数据生成接口
-@app.route('/sign', methods=['GET', 'POST'])
-def apiSign():
-    try:
-        if request.method == 'POST':
-            data = request.get_json()
-            if data is None:
-                return jsonify({'code': 202, 'msg': '参数必须为json格式'})
-            else:
-                sign = checkSign(data).check_dict()
-                return jsonify({'code': 200,
-                                'get_sign': sign,
-                                'msg': '成功'
-                                })
-        else:
-            return jsonify({
-                'msg': "该接口仅支持 [POST] 请求方式",
-                "code": 201
-            })
-    except Exception as exception:
-        print(str(exception))
-        return jsonify({'code': 500, 'msg': '系统错误'})
 
-'''
-def userName(level):
-    if level == 0:
-        str1 = 'M星人'
-    elif level == 1:
-        str1 = 'M达人'
-    elif level == 2:
-        str1 = 'M体验官'
-    elif level == 3:
-        str1 = 'M司令'
-    elif level == 4:
-        str1 = '合伙人'
-    elif level == 5:
-        str1 = '高级合伙人'
-    elif level == 6:
-        str1 = '总监'
-    elif level == 7:
-        str1 = '高级总监'
-    elif level == 8:
-        str1 = '代言人'
-    else:
-        str1 = '高级代言人'
-    return str1
-'''
-
-def userName(level):
-    if level == 0:
-        str1 = '普通用户'
-    elif level == 1:
-        str1 = 'VIP'
-    elif level == 2:
-        str1 = '店长'
-    elif level == 3:
-        str1 = '总监'
-    elif level == 4:
-        str1 = '合伙人'
-    elif level == 5:
-        str1 = '联创'
-    else:
-        str1 = '总公司'
-    return str1
-
-'''
-def userName(level):
-    if level == 0:
-        str1 = '普通用户'
-    elif level == 1:
-        str1 = 'VIP'
-    elif level == 2:
-        str1 = '天使'
-    elif level ==3:
-        str1 = '顾问'
-    elif level ==4:
-        str1='总监'
-    else:
-        str1='联创'
-    return str1
-'''
-
+userName = {0: "普通用户",
+            1: "VIP",
+            2: "店长",
+            3: "总监",
+            4: "合伙人",
+            5: "联创",
+            6:"总公司"}
+# 收益类型：面膜销售：差价 190；全部返还 180；拉新给予 171  （+10）；拉新扣减 172 （ -10）；；；服务投资：差价 290；全部返还 280；越级奖励 270；一代 211；二代 212；
+profit_type={
+    151:'面膜销售一代联创',
+    152:'面膜销售一代联创',
+    160:'面膜订单进货差价',
+    260:'套餐订单进货差价',
+    190:'面膜销售差价',
+    180:'面膜全部返还',
+    171:'拉新给10块',
+    172:'拉新扣减10块',
+    290:'服务商投资差价',
+    280:'服务商全部返还',
+    270:'服务商越级奖励',
+    211:'服务商一代奖励',
+    212:'服务商二代奖励',
+    213:'服务商三代奖励',
+    251:'联创第一代',
+    252:'联创第二代',
+    360:'身份奖励'
+}
 # 查询关系
 @app.route('/getName', methods=['POST', 'GET'])
 def apiName():
@@ -100,22 +46,20 @@ def apiName():
             id = int(request.form['id'])
             ids = []
             id_user = ShopUser.query.get(id)
-            str1 = userName(id_user.pt_level)
+            str1 = userName[id_user.pt_level]
             ids.append({'user_id': id,
                         'level': str1,
                         'mobile': id_user.mobile,
-                        # 'invitecode': id_user.invite_code
-                        })
+                        'invitecode': id_user.invite_code})
             # ids.append({'user_id': id, 'level': str1})
             while True:
                 pid = ShopUserInvite.query.get(id).pid
                 pid_user = ShopUser.query.get(pid)
-                str2 = userName(pid_user.pt_level)
+                str2 = userName[pid_user.pt_level]
                 ids.append({'user_id': pid,
                             'level': str2,
                             'mobile': pid_user.mobile,
-                            # 'invitecode': pid_user.invite_code
-                            })
+                            'invitecode': pid_user.invite_code})
                 # ids.append({'user_id': pid, 'level': str2})
                 id = pid
                 if pid == 1:
@@ -149,7 +93,7 @@ def apiLevel():
                     ShopUserInvite.pid == id, ShopUser.pt_level == level)
             count = query.count()
             for ll in query.all():
-                str1 = userName(ll.pt_level)
+                str1 = userName[ll.pt_level]
                 ids.append({'user_id': ll.id, 'level': str1,
                             'mobile': ll.mobile, 'invitecode': ll.invite_code})
             return jsonify({'msg': '成功', 'code': 200, 'data': {
@@ -163,14 +107,7 @@ def apiLevel():
         print(str(exception))
         return jsonify({'msg': '系统错误', 'code': 500})
 
-income_type={
-            1 :"商品销售奖励",
-            2 :"服务商销售奖励",
-            3: "下级销售奖励",
-            4: "提现",
-            5:"进货差价奖励"
 
-}
 # 查询收益
 @app.route('/getIncome', methods=['POST', 'GET'])
 def apiIncome():
@@ -179,16 +116,16 @@ def apiIncome():
             Sum = 0
             ids = []
             orderNo = request.form['orderNo']
-            query = ShopUser.query.join(
-                ShopUserIncomeDetail,
-                ShopUser.id == ShopUserIncomeDetail.user_id).add_entity(ShopUserIncomeDetail).filter(
-                ShopUserIncomeDetail.order_no == orderNo).order_by(
-                ShopUserIncomeDetail.id.asc())
+            query = MliveUser.query.join(
+                MliveProfitLog,
+                MliveUser.id == MliveProfitLog.user_id).add_entity(MliveProfitLog).filter(
+                MliveProfitLog.order_no == orderNo).order_by(
+                MliveProfitLog.id.asc())
             for ll in query.all():
-                Sum += ll.ShopUserIncomeDetail.operate_income
-                str1 = userName(ll.ShopUser.pt_level)
-                ids.append({'use_id': ll.ShopUser.id, 'level': str1, 'IncomeDetail': str(
-                    ll.ShopUserIncomeDetail.operate_income),'incometype':income_type[ll.ShopUserIncomeDetail.income_type]})
+                Sum += ll.MliveProfitLog.amount
+                str1 = userName[ll.MliveUser.level]
+                ids.append({'use_id': ll.MliveUser.id, 'mobile':ll.MliveUser.mobile,'level': str1, 'income': str(
+                    ll.MliveProfitLog.amount),'incomeType':profit_type[ll.MliveProfitLog.profit_type]})
             return jsonify({'msg': '成功', 'code': 200, 'data': {
                            'count': str(Sum), 'items': ids}})
     except Exception as exception:
@@ -211,38 +148,32 @@ def apiEncode():
     except Exception as exception:
         return jsonify({'msg': '系统错误', 'code': 500, 'error': str(exception)})
 
+ # 订单修改
 
- #订单修改
+
 @app.route('/apiOrder', methods=['POST', 'GET'])
 def apiOrder():
     try:
         if request.method == 'POST':
             orderNo = request.form['orderNo']
-            sql=f'UPDATE shop_order SET price=0.01 WHERE order_no={ orderNo }'
-            try:
-                db.session.execute(sql)
-            except Exception as exception:
-                print(exception)
-            return jsonify({'msg': '修改成功', 'code': 200,})
-        elif request.method == 'GET':
-            orderNo = request.args.get('orderNo')
-            sql = f'UPDATE shop_order SET price=0.01 WHERE order_no={orderNo}'
-            try:
-                db.session.execute(sql)
-            except Exception as exception:
-                print(exception)
+            sql = f'SELECT a.profit_type,a.amount,a.user_id,b.mobile,b.level FROM mlive_profit_log a JOIN mlive_user b ON a.user_id=b.id WHERE order_no={orderNo} ORDER BY a.id ASC'
+            income_data = db.session.execute(sql)
+            print(list(income_data.fetchall()))
             return jsonify({'msg': '修改成功', 'code': 200, })
+        elif request.method == 'GET':
+            pass
     except Exception as exception:
         return jsonify({'msg': '系统错误', 'code': 500, 'error': str(exception)})
 
 
-#注册
+# 注册
 @app.route('/register', methods=['POST', 'GET'])
 def apiregister():
     try:
         if request.method == 'POST':
             mobile = int(request.form['mobile'])
-            inviteCode =request.form['inviteCode']
+            inviteCode = request.form['inviteCode']
+            number=int(request.form['number'])
             url1 = 'auth/code'
             url2 = 'auth/login/mp'
             index = 0
@@ -250,25 +181,26 @@ def apiregister():
                 data1 = {
                     "type": 1,
                     "areaCode": "86",
-                    "mobile": mobile,
-                    "mercId": "888000000000003",
-                    "platform": "XFYLMALL",
+                    "mobile": str(mobile),
+                    "mercId": "888000000000004",
+                    "platform": "ZBMALL",
                     "sysCnl": "H5",
                     "timestamp": "1574066250"
                 }
+                if index == number:
+                    break
+                getRequests(url1, data1).get_requests()
                 data2 = {
                     "code": "0",
-                    "mobile": mobile,
+                    "mobile": str(mobile),
                     "inviteCode": inviteCode,
-                    "mercId": "888000000000003",
-                    "platform": "XFYLMALL",
+                    "mercId": "888000000000004",
+                    "platform": "ZBMALL",
                     "sysCnl": "H5",
                     "timestamp": "1574066264"
                 }
-                if index == 9:
-                    break
-                getRequests(url1, data1).get_requests()
-                getRequests(url2, data2).get_requests()
+                new_inviteCode = getRequests(url2, data2).get_requests()['data']['inviteCode']
+                inviteCode = new_inviteCode
                 mobile += 1
                 index += 1
         return jsonify({'msg': '成功', 'code': 200, 'data': '注册成功'})
