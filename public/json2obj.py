@@ -35,7 +35,7 @@ def obj2json(a):
 # json.dumps 将python对象dict转换成json字符串
 a = {
     "data": {
-        "cards_tip": "0",
+        "cards_tip": "1",
         "service_tip": "0"
     },
     "msg": "success",
