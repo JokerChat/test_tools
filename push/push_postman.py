@@ -8,26 +8,48 @@ import time
 import datetime
 url='send'
 now_time=datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-data= {
-   "type":"customizedcast",
-  "title":"收到了吗？"+now_time,
-    "ticker":"test"+now_time,
-  "text":"收到了吗？"+now_time,
-    "subtitle":"test"+now_time,
-    "body":"收到了吗？"+now_time,
-     "productionMode":0,
-    "alias": 67,
-    "extra":{"A":123,"B":123344},
+data={
+    "ticker":"名品猫丨客服",
+    "activity":"com.xfhl.umpushlib.MipushTestActivity",
+    "productionMode":1,
+    "mipush":"1",
+    "body":"",
+    "title":"名品猫丨客服",
+    "type":"customizedcast",
+    "platform":"MPM",
+    "url":"0",
+    "miActivity":"com.xfhl.umpushlib.MipushTestActivity",
     "aliasType":"alias",
+    "extra":{
+        "link":"http://h5.mingpinmao.cn/help?t=1",
+        "type":1
+    },
+    "subtitle":"尊敬的用户，",
+    "afterOpen":"go_activity",
+    "alias":"56",
+    "text":"尊敬的用户，",
+    "description":"",
+    "production_mode":None,
+    "alert":{
+        "title":"系统通知",
+        "subtitle":"尊敬的用户，",
+        "body":"名品猫丨客服"
+    }
 }
+
 # data= {
 #    "taskId":"fe1e1655ea25b5645b0b484beb32cb9d"
 # }
+
+# re=getRequests(url,data).get_requests()
+
+
+
 index=0
 while 1:
     re=getRequests(url,data).get_requests()
     index +=1
     print("推送成功")
     time.sleep(5)
-    if index ==60:
+    if index ==10:
         break

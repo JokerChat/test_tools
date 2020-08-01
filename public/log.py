@@ -32,7 +32,7 @@ class logger(object):
         console = logging.StreamHandler()
         console.setLevel(logging.INFO)
         # 定义handler的输出格式
-        formatter = logging.Formatter('%(asctime)s-%(levelname)s-%(filename)s-%(name)s日志信息：%(message)s')
+        formatter = logging.Formatter('%(asctime)s - [%(levelname)s] - [%(name)s] - [msg]：%(message)s - %(lineno)d')
         file_log.setFormatter(formatter)
         console.setFormatter(formatter)
         # 给logger添加handler

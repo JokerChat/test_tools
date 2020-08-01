@@ -1,15 +1,16 @@
 # -*- coding: utf-8 -*-
-# @Author       :junjie    
+# @Author       :junjie
 # @Time         :2019/4/24 14:55
 # @FileName     :MPM_postman.py
 #IDE            :PyCharm
-from MPM_Mall.get_requests import getRequests
-import json
-#目前是APP接口那边的,base_url是mobile
-url='feedback/create'
+from MPM_Mall.handle_requests import HandleRequests
+# 目前是APP接口那边的,base_url是mobile
+url='auth/login'
 data= {
-    "content": "测试图片上传反馈问题嘻嘻嘻",
-    "images":["https://mpmallapp.oss-cn-beijing.aliyuncs.com/feedback/wj5fdebq0rtse2s3dryq.jpg"]
+	"mobile": "13119656020",
+	"password": "123",
+	"type": "2",
 }
-re=getRequests(url,data).get_requests()
-print(re)
+do_request=HandleRequests()
+res = do_request.send("POST", url, json=data)
+print(res.json())

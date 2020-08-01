@@ -5,11 +5,7 @@
 #IDE            :PyCharm
 #封装推送验签
 import time,hashlib,base64
-from public.config import *
-if get('project_type')==0:
-    Signkey=get('mpm_key')['sign_key'][get('is_test')]
-else:
-    Signkey = get('mpwj_key')['sign_key'][get('is_test')]
+from public.push_common import push_sign_key,push_header_key
 class checkSign:
     #初始化传入dict
     def __init__(self,dict):
@@ -35,43 +31,36 @@ class checkSign:
                 data = '&'+str(i[0]) + '=' + str(i[1])
                 alist.append(data)
             new_string = ''.join(alist)
-            return self.__sign(string=new_string)
+            return {'Content-Type':'application/json',
+                    'X-PUSH-AppVer': '1.0.0',
+                    'X-PUSH-AppKey':push_header_key,
+                    'X-PUSH-Sign':self.__sign(string=new_string),
+                    'X-PUSH-Utime':str(int(time.time()))}
     #私有方法,生成签名
     def __sign(self,string):
         if string:
-            sign='X-PUSH-AppVer=1.0.0'+string+'&secret='+Signkey
+            sign='X-PUSH-AppVer=1.0.0'+string+'&secret='+push_sign_key
             m = hashlib.md5()
             m.update(sign.encode("utf8"))
             encodeStr = m.hexdigest()
             base_code = base64.b64encode(encodeStr.encode('utf-8'))
             return str(base_code,'utf-8')
         else:
-            sign ='X-PUSH-AppVer=1.0.0' + '&secret='+Signkey
+            sign ='X-PUSH-AppVer=1.0.0' + '&secret='+push_sign_key
             m = hashlib.md5()
             m.update(sign.encode("utf8"))
             encodeStr = m.hexdigest()
             base_code = base64.b64encode(encodeStr.encode('utf-8'))
             return str(base_code,'utf-8')
-    def Utime(self):
-        now_time=time.time()
-        return int(now_time)
+
+
 if __name__=='__main__':
     dict={
-   "type":"customizedcast",
-  "title":"俊杰测试,测试多个alias",
-    "ticker":"俊杰测试,测试多个alias",
-  "text":"名品猫优惠大促销",
-    "subtitle":"苹果测试",
-    "body":"苹果通知详情。。。。",
-     "productionMode":0,
-    "mipush":1,
-    "miActivity":1,
-    "alias":"67",
-    "aliasType":"alias"
+   "a":123,
+    "b":"b ss"
 }
     Sign=checkSign(dict)
     print(Sign.check_dict())
-    print(Sign.Utime())
 
 
 

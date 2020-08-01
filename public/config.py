@@ -7,6 +7,7 @@ import os
 import copy as mycopy
 import yaml
 
+from public.config_path import CONF_FILE_PATH
 __all__ = ['set', 'get', 'copy', 'update', '_print']
 
 def get_yaml():
@@ -14,10 +15,9 @@ def get_yaml():
     解析 yaml
     :return: s  字典
     """
-    path = os.path.join(os.path.dirname(__file__), 'config.yaml')
     try:
 
-        with open(path, 'r', encoding='utf-8') as file:
+        with open(CONF_FILE_PATH, 'r', encoding='utf-8') as file:
             config = yaml.safe_load(file)
             # config = yaml.load(file, Loader=yaml.Loader)
         return config
